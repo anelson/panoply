@@ -5,6 +5,7 @@ using System.Text;
 
 using Panoply.Library;
 using Filters = Panoply.Library.Filters;
+using Presentation = Panoply.Library.Presentation;
 
 namespace Panoply.Sandbox
 {
@@ -12,7 +13,26 @@ namespace Panoply.Sandbox
     {
         static void Main(string[] args)
         {
-            DumpFilters();
+            String cmd = "all";
+            if (args.Length >= 1)
+            {
+                cmd = args[0].ToLower();
+            }
+
+            if (cmd == "all" || cmd == "dumpfilters")
+            {
+                DumpFilters();
+            }
+
+            if (cmd == "all" || cmd == "dumpfilterspresentation")
+            {
+                DumpFiltersPresentation();
+            }
+
+            if (cmd == "all" || cmd == "dumpfiltersxml")
+            {
+                DumpFiltersXml();
+            }
         }
 
         private static void DumpFilters()
@@ -87,6 +107,85 @@ namespace Panoply.Sandbox
                 }
             } catch {
             }
+        }
+
+        private static void DumpFiltersPresentation()
+        {
+            Console.WriteLine("Filter categories:");
+            foreach (Presentation.FilterCategoryTreeNode filterCategory in Presentation.FilterCategoryTreeNode.EnumerateFilterCategories())
+            {
+                DumpFilterCategoryPresentation(filterCategory);
+            }
+        }
+
+        private static void DumpFilterCategoryPresentation(Panoply.Library.Presentation.FilterCategoryTreeNode filterCategory)
+        {
+            Console.Write("* {0}", filterCategory.FriendlyName);
+            Console.WriteLine(" [{0}]", filterCategory.FriendlyNameException);
+
+            Console.Write("    Device Path: {0}", filterCategory.DevicePath);
+            Console.WriteLine(" [{0}]", filterCategory.DevicePathException);
+
+            Console.Write("    Merit: {0}", filterCategory.Merit);
+            Console.WriteLine(" [{0}]", filterCategory.MeritException);
+
+            Console.Write("    CLSID: {0}", filterCategory.Clsid);
+            Console.WriteLine(" [{0}]", filterCategory.ClsidException);
+
+            Console.WriteLine("    Filters:");
+
+            DumpFiltersPresentation(filterCategory.Filters);
+
+            Console.WriteLine();
+        }
+
+        private static void DumpFiltersPresentation(IList<Panoply.Library.Presentation.FilterTreeNode> filters)
+        {
+            foreach (Presentation.FilterTreeNode filter in filters)
+            {
+                DumpFilterPresentation(filter);
+            }
+        }
+
+        private static void DumpFilterPresentation(Panoply.Library.Presentation.FilterTreeNode filter)
+        {
+            Console.Write("      * {0}", filter.FriendlyName);
+            Console.WriteLine(" [{0}]", filter.FriendlyNameException);
+
+            Console.Write("        Device Path: {0}", filter.DevicePath);
+            Console.WriteLine(" [{0}]", filter.DevicePathException);
+
+            Console.Write("        CLSID: {0}", filter.Clsid);
+            Console.WriteLine(" [{0}]", filter.ClsidException);
+
+            Console.Write("        Merit: {0}", filter.Merit);
+            Console.WriteLine(" [{0}]", filter.MeritException);
+
+            Console.Write("        Version: {0}", filter.Version);
+            Console.WriteLine(" [{0}]", filter.VersionException);
+
+            Console.Write("        FilePath: {0}", filter.FilePath);
+            Console.WriteLine(" [{0}]", filter.FilePathException);
+
+            Console.Write("        RawFilePath: {0}", filter.RawFilePath);
+            Console.WriteLine(" [{0}]", filter.RawFilePathException);
+
+            Console.Write("        FileVersion: {0}", filter.FileVersion);
+            Console.WriteLine(" [{0}]", filter.FileVersionException);
+
+            Console.WriteLine();
+        }
+
+        private static void DumpFiltersXml()
+        {
+            Console.WriteLine("Filter tree as XML:");
+            Console.WriteLine();
+
+            Presentation.FilterCategoryTreeNode.WriteFilterCategoriesToXml(
+                System.Console.OpenStandardOutput(),
+                Presentation.FilterCategoryTreeNode.EnumerateFilterCategories());
+
+            Console.WriteLine();
         }
     }
 }

@@ -43,6 +43,14 @@ namespace Panoply.Library.Filters
             }
         }
 
+        /// <summary>
+        /// Called by a Filter when it has been unregistered
+        /// </summary>
+        /// <param name="filter"></param>
+        internal void FilterUnregistered(Filter filter) {
+            _filters.Remove(filter);
+        }
+
         protected override Merit GetMerit()
         {
             try
@@ -69,7 +77,6 @@ namespace Panoply.Library.Filters
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Assert(false);
                     return Merit.None;
                 }
             }

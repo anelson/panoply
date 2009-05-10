@@ -24,7 +24,10 @@ namespace Panoply.Library.Filters
             public Merit Merit;
         }
 
+        const String FILTER_DATA_BLOB_VALUE = "FilterData";
+
         BinaryData _binaryData;
+        byte[] _binaryDataBlob;
         String _rawFilePath;
         String _filePath;
         FilterCategory _category;
@@ -40,6 +43,27 @@ namespace Panoply.Library.Filters
         public String FilterRegistryKey { get { return String.Format("CLSID\\{{{0}}}", Clsid); } }
         public String FilterInProcServer32RegistryKey { get { return String.Format("{0}\\InProcServer32", FilterRegistryKey); } }
         public String FilterInstanceRegistryKey { get { return String.Format("CLSID\\{{{0}}}\\Instance\\{{{1}}}", _category.Clsid, Clsid); } }
+
+        /// <summary>
+        /// HKEY_CLASSES_ROOT\Filter\[clsid] key, supposedly used to make the filter discoverable for intelligent
+        /// connect, according to http://msdn.microsoft.com/en-us/library/ms924596.aspx
+        /// </summary>
+        public String FilterIntelligentConnectRegistryKey { get { return String.Format("Filter\\{{{0}}}", Clsid); } }
+
+        /// <summary>
+        /// All registry keys relevant to this filter.  Useful in trying to unregister it manually
+        /// </summary>
+        public String[] FilterRegistryKeys
+        {
+            get
+            {
+                return new String[] {
+                    FilterRegistryKey,
+                    FilterInstanceRegistryKey,
+                    FilterIntelligentConnectRegistryKey
+                };
+            }
+        }
 
         public String RawFilePath
         {
@@ -127,6 +151,27 @@ namespace Panoply.Library.Filters
             }
         }
 
+        public void SetMerit(Merit merit) {
+            if (GetBinaryData() == null)
+            {
+                throw new InvalidOperationException("Can't set merit when no binary data are available");
+            }
+
+            Merit oldMerit = GetBinaryData().Merit;
+
+            try
+            {
+                GetBinaryData().Merit = merit;
+                WriteBinaryData();
+            }
+            catch
+            {
+                //Continue to report the old merit since the new merit didn't save correctly
+                GetBinaryData().Merit = oldMerit;
+                throw;
+            }
+        }
+
         public void ShowPropertyPage(IntPtr parentWindowHandle)
         {
             if (Clsid == Guid.Empty) {
@@ -136,38 +181,83 @@ namespace Panoply.Library.Filters
 
             Type filterType = Type.GetTypeFromCLSID(Clsid);
 
-            Object filterObj = System.Activator.CreateInstance(filterType);
-            IBaseFilter filter = (IBaseFilter)filterObj;
+            Object filterObj = null;
+
             try
             {
-                ISpecifyPropertyPages propPages = (ISpecifyPropertyPages)filterObj;
-                DsCAUUID pages = new DsCAUUID();
-                int hr = propPages.GetPages(out pages);
-                DsError.ThrowExceptionForHR(hr);
-
-                try
-                {
-                    hr = Utils.Com.OleCreatePropertyFrame(parentWindowHandle,
-                        0,
-                        0,
-                        FriendlyName,
-                        1,
-                        new object[] { filter },
-                        (uint)pages.cElems,
-                        pages.ToGuidArray(),
-                        0,
-                        0,
-                        IntPtr.Zero);
-                    DsError.ThrowExceptionForHR(hr);
-                }
-                finally
-                {
-                    Marshal.FreeCoTaskMem(pages.pElems);
-                }
+                filterObj = System.Activator.CreateInstance(filterType);
             }
-            catch (COMException e)
+            catch (FileNotFoundException e)
+            {
+                throw new ApplicationException(
+                    String.Format("Unable to display property page for this filter because the filter DLL '{0}' was not found",
+                    FilePath),
+                    e);
+            }
+
+            IBaseFilter filter = (IBaseFilter)filterObj;
+
+            ISpecifyPropertyPages propPages;
+            try
+            {
+                propPages = (ISpecifyPropertyPages)filterObj;
+            }
+            catch (InvalidCastException e)
             {
                 throw new NotSupportedException("This filter does not support property pages", e);
+            }
+
+            DsCAUUID pages = new DsCAUUID();
+            int hr = propPages.GetPages(out pages);
+            DsError.ThrowExceptionForHR(hr);
+
+            try
+            {
+                hr = Utils.Com.OleCreatePropertyFrame(parentWindowHandle,
+                    0,
+                    0,
+                    FriendlyName,
+                    1,
+                    new object[] { filter },
+                    (uint)pages.cElems,
+                    pages.ToGuidArray(),
+                    0,
+                    0,
+                    IntPtr.Zero);
+                DsError.ThrowExceptionForHR(hr);
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pages.pElems);
+            }
+        }
+
+        /// <summary>
+        /// Uses COM to unregister this filter DLL.  
+        /// </summary>
+        public void Unregister()
+        {
+            Panoply.Library.Utils.Com.RegisterDll(FilePath, false);
+            _category.FilterUnregistered(this);
+        }
+
+        /// <summary>
+        /// Attempts to manually remove this filter from the registry.
+        /// Do not attempt unless Unregister has failed, for example because the DLL is no longer installed
+        /// </summary>
+        public void RemoveFromRegistry()
+        {
+            foreach (String key in FilterRegistryKeys)
+            {
+                try
+                {
+                    RemoveRegistryKey(key);
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentException(String.Format("Error removing registry key '{0}': {1}", key, e.Message),
+                        e);
+                }
             }
         }
 
@@ -197,8 +287,8 @@ namespace Panoply.Library.Filters
                 {
                     if (reg != null)
                     {
-                        byte[] blob = (byte[])reg.GetValue("FilterData");
-                        GCHandle handle = GCHandle.Alloc(blob, GCHandleType.Pinned);
+                        _binaryDataBlob = (byte[])reg.GetValue(FILTER_DATA_BLOB_VALUE);
+                        GCHandle handle = GCHandle.Alloc(_binaryDataBlob, GCHandleType.Pinned);
                         try
                         {
                             _binaryData = new BinaryData();
@@ -214,6 +304,56 @@ namespace Panoply.Library.Filters
             }
 
             return _binaryData;
+        }
+
+        private void WriteBinaryData()
+        {
+            //Write the updated binary data to the binary data blob, then write the blob to the registry
+            GCHandle handle = GCHandle.Alloc(_binaryDataBlob, GCHandleType.Pinned);
+            try
+            {
+                Marshal.StructureToPtr(_binaryData,
+                    handle.AddrOfPinnedObject(),
+                    true);
+            }
+            finally
+            {
+                handle.Free();
+            }
+            try
+            {
+                using (RegistryKey reg = Registry.ClassesRoot.OpenSubKey(FilterInstanceRegistryKey, RegistryKeyPermissionCheck.ReadWriteSubTree))
+                {
+                    if (reg == null)
+                    {
+                        throw new InvalidOperationException(String.Format("The registry key '{0}' does not exist for this filter", FilterInstanceRegistryKey));
+                    }
+
+                    reg.SetValue(FILTER_DATA_BLOB_VALUE, _binaryDataBlob);
+                }
+            } 
+            catch (System.Security.SecurityException e)
+            {
+                throw new ApplicationException("Access to the specified registry key is denied.  Ensure this application is running with administrator privileges.",
+                    e);
+            }
+        }
+
+        private void RemoveRegistryKey(string key)
+        {
+            try
+            {
+                RegistryKey reg = Registry.ClassesRoot.OpenSubKey(key, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                if (reg == null) { return; }
+                reg.Close();
+            }
+            catch (System.Security.SecurityException e)
+            {
+                throw new ApplicationException("Access to the specified registry key is denied.  Ensure this application is running with administrator privileges.",
+                    e);
+            }
+
+            Registry.ClassesRoot.DeleteSubKeyTree(key);
         }
     }
 }

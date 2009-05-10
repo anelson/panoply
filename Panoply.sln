@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectShowLib-2005", "Direc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Panoply.Sandbox", "Panoply.Sandbox\Panoply.Sandbox.csproj", "{29B9EA29-A2B8-4F4B-9452-0A376196A559}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Panoply.Gui", "Panoply.Gui\Panoply.Gui.csproj", "{CA24DB0A-AE21-4295-B820-DF41E114546A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{29B9EA29-A2B8-4F4B-9452-0A376196A559}.Debug|Any CPU.Build.0 = Debug|x86
 		{29B9EA29-A2B8-4F4B-9452-0A376196A559}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29B9EA29-A2B8-4F4B-9452-0A376196A559}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA24DB0A-AE21-4295-B820-DF41E114546A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA24DB0A-AE21-4295-B820-DF41E114546A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA24DB0A-AE21-4295-B820-DF41E114546A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA24DB0A-AE21-4295-B820-DF41E114546A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
