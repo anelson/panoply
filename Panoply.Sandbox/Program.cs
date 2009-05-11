@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using Panoply.Library;
 using Filters = Panoply.Library.Filters;
 using Presentation = Panoply.Library.Presentation;
+using MediaInfo = Panoply.Library.MediaInfo;
 
 namespace Panoply.Sandbox
 {
@@ -32,6 +32,11 @@ namespace Panoply.Sandbox
             if (cmd == "all" || cmd == "dumpfiltersxml")
             {
                 DumpFiltersXml();
+            }
+
+            if (cmd == "mediainfo" && args.Length > 1)
+            {
+                DumpMediaInfo(args[1]);
             }
         }
 
@@ -185,6 +190,71 @@ namespace Panoply.Sandbox
                 System.Console.OpenStandardOutput(),
                 Presentation.FilterCategoryTreeNode.EnumerateFilterCategories());
 
+            Console.WriteLine();
+        }
+
+        private static void DumpMediaInfo(string path)
+        {
+            Console.WriteLine("Media info for '{0}'", path);
+            Console.WriteLine("MediaInfoLib version {0}", MediaInfo.MediaInfo.LibraryVersion);
+
+            using (MediaInfo.MediaInfo mi = MediaInfo.MediaInfo.Open(path))
+            {
+                Console.WriteLine(mi.Inform());
+
+                Console.WriteLine();
+                Console.WriteLine("Media info tree: ");
+
+                foreach (MediaInfo.StreamType type in Enum.GetValues(typeof(MediaInfo.StreamType)))
+                {
+                    DumpMediaInfoStreams(mi, type);
+                }
+            }
+        }
+
+        private static void DumpMediaInfoStreams(Panoply.Library.MediaInfo.MediaInfo mi, Panoply.Library.MediaInfo.StreamType type)
+        {
+            Console.WriteLine("Stream Type {0}:", type);
+
+            foreach (MediaInfo.Stream stream in mi.GetStreams(type))
+            {
+                DumpMediaInfoStream(stream);
+                Console.WriteLine();
+            }
+        }
+
+        private static void DumpMediaInfoStream(Panoply.Library.MediaInfo.Stream stream)
+        {
+            Console.WriteLine("  * Stream Number {0}:", stream.Number + 1);
+            Console.WriteLine("    Inform: {0}", stream.Inform());
+            Console.WriteLine();
+            Console.WriteLine("    Parameters:");
+            foreach (MediaInfo.Parameter param in stream.Parameters)
+            {
+                if (String.IsNullOrEmpty(param.Value))
+                {
+                    continue;
+                }
+
+                Console.Write("    * {0}", param.Name);
+                if (!String.IsNullOrEmpty(param.LocalizedName) &&
+                    param.Name != param.LocalizedName)
+                {
+                    Console.Write(" ({0})", param.LocalizedName);
+                }
+
+                Console.Write(" = '{0}'", param.Value);
+                if (!String.IsNullOrEmpty(param.Units))
+                {
+                    Console.Write(" {0}", param.Units);
+                    if (!String.IsNullOrEmpty(param.LocalizedUnits) &&
+                        param.Units != param.LocalizedUnits)
+                    {
+                        Console.Write(" ({0})", param.LocalizedUnits);
+                    }
+                }
+                Console.WriteLine();
+            }
             Console.WriteLine();
         }
     }

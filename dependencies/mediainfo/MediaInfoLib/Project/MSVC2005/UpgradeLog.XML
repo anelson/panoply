@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="MediaInfoLib_MSVC">
+</Property><Property Name="Solution File" Value="C:\work\projects\Personal\Panoply\dependencies\mediainfo\MediaInfoLib\Project\MSVC2005\MediaInfoLib_MSVC.sln">
+</Property><Property Name="Date" Value="Sunday, May 10, 2009">
+</Property><Property Name="Time" Value="20:19 PM">
+</Property></Properties><Event ErrorLevel="1" Project="MediaInfoLib" Source="Library\MediaInfoLib.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="MediaInfoLib" Source="Library\MediaInfoLib.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="MediaInfoLib" Source="Library\MediaInfoLib.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MediaInfoDll" Source="DLL\MediaInfoDll.vcproj" Description="Web deployment to the local IIS server is no longer supported. The Web Deployment build tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="MediaInfoDll" Source="DLL\MediaInfoDll.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="MediaInfoDll" Source="DLL\MediaInfoDll.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="MediaInfoDll" Source="DLL\MediaInfoDll.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ZenLib" Source="..\..\..\ZenLib\Project\MSVC2005\Library\ZenLib.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="ZenLib" Source="..\..\..\ZenLib\Project\MSVC2005\Library\ZenLib.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="zlib" Source="..\..\..\zlib\projects\MSVC2005\zlib.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="zlib" Source="..\..\..\zlib\projects\MSVC2005\zlib.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="MediaInfoLib_MSVC.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="MediaInfoLib_MSVC.sln" Description="Converted">
+</Event></UpgradeLog>

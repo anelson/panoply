@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Panoply.Library</RootNamespace>
     <AssemblyName>Panoply.Library</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,15 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -48,6 +39,9 @@
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterCategory.cs" />
     <Compile Include="Filters\FilterDevice.cs" />
+    <Compile Include="MediaInfo\MediaInfo.cs" />
+    <Compile Include="MediaInfo\Parameter.cs" />
+    <Compile Include="MediaInfo\Stream.cs" />
     <Compile Include="Presentation\FilterCategoryTreeNode.cs" />
     <Compile Include="Presentation\FilterDeviceTreeNode.cs" />
     <Compile Include="Presentation\FilterTreeNode.cs" />
@@ -56,9 +50,13 @@
     <Compile Include="Utils\FileVersion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectShow.NET\src\DirectShowLib-2005.csproj">
+    <ProjectReference Include="..\dependencies\DirectShow.NET\src\DirectShowLib-2005.csproj">
       <Project>{CE009BFA-5EF6-4153-B2A1-2FA79698A9AE}</Project>
       <Name>DirectShowLib-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Panoply.Library.Native\Panoply.Library.Native.vcproj">
+      <Project>{612FFB8F-AEFB-4465-B427-02970234F7D9}</Project>
+      <Name>Panoply.Library.Native</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
