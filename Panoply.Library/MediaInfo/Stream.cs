@@ -8,6 +8,14 @@ namespace Panoply.Library.MediaInfo
 {
     public class Stream
     {
+        class ParameterComparer : Comparer<Parameter>
+        {
+            public override int Compare(Parameter x, Parameter y)
+            {
+                return x.Name.CompareTo(y.Name);
+            }
+        }
+
         const String INFORM_PROPERTY = "Inform";
         MediaInfo _mediaInfo;
         StreamType _type;
@@ -42,6 +50,8 @@ namespace Panoply.Library.MediaInfo
                         }
                     }
 
+                    //Sort the parameters alphabetically
+                    parameters.Sort(new ParameterComparer());
                     _params = parameters;
                 }
 
