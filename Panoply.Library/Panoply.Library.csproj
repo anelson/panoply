@@ -36,9 +36,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilterGraph\Filter.cs" />
+    <Compile Include="FilterGraph\Graph.cs" />
+    <Compile Include="FilterGraph\Pin.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterCategory.cs" />
     <Compile Include="Filters\FilterDevice.cs" />
+    <Compile Include="FilterGraph\GraphBuilder.cs" />
     <Compile Include="MediaInfo\MediaInfo.cs" />
     <Compile Include="MediaInfo\Parameter.cs" />
     <Compile Include="MediaInfo\Stream.cs" />

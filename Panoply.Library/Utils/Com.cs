@@ -15,6 +15,7 @@ namespace Panoply.Library.Utils
         public const int E_FILENOTFOUND = unchecked((int)0x80070002);
         public const int E_PROP_ID_UNSUPPORTED = unchecked((int)0x80070490);
         public const int E_INVALIDARG = unchecked((int)0x80070057);
+        public const int VFW_E_NOT_CONNECTED = unchecked((int)0x80040209);
 
         [DllImport("OleAut32.dll", PreserveSig = false)]
         public static extern int OleCreatePropertyFrame(IntPtr hwndOwner, 

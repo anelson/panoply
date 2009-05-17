@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using Panoply.Library;
 using Filters = Panoply.Library.Filters;
 using Presentation = Panoply.Library.Presentation;
 using MediaInfo = Panoply.Library.MediaInfo;
+using FilterGraph = Panoply.Library.FilterGraph;
 
 namespace Panoply.Sandbox
 {
@@ -32,6 +34,23 @@ namespace Panoply.Sandbox
             if (cmd == "all" || cmd == "dumpfiltersxml")
             {
                 DumpFiltersXml();
+            }
+
+            if (cmd == "showfiltergraph" && args.Length > 1)
+            {
+                List<String> fileNames = new List<string>(args);
+                fileNames.RemoveAt(0);
+
+                ShowFilterGraph(fileNames.ToArray());
+            }
+
+            if (cmd == "renderfiltergraph" && args.Length > 2)
+            {
+                List<String> fileNames = new List<string>(args);
+                fileNames.RemoveAt(0);
+                fileNames.RemoveAt(fileNames.Count - 1);
+
+                RenderFilterGraph(fileNames.ToArray(), args[args.Length-1]);
             }
 
             if (cmd == "mediainfo" && args.Length > 1)
@@ -256,6 +275,70 @@ namespace Panoply.Sandbox
                 Console.WriteLine();
             }
             Console.WriteLine();
+        }
+
+        private static void ShowFilterGraph(String[] fileNames)
+        {
+            foreach (String fileName in fileNames)
+            {
+                Console.WriteLine("Rendering '{0}'", fileName);
+            }
+
+            FilterGraph.Graph graph = FilterGraph.GraphBuilder.BuildFilterGraphForFiles(fileNames);
+
+            Console.WriteLine("Filter graph:");
+            foreach (FilterGraph.Filter filter in graph.Filters)
+            {
+                ShowFilterGraphFilter(filter);
+            }
+        }
+
+        private static void ShowFilterGraphFilter(Panoply.Library.FilterGraph.Filter filter)
+        {
+            Console.WriteLine(" * {0}", filter.Name);
+            Console.WriteLine("   Input pins:");
+            ShowFilterGraphFilterPins(filter, DirectShowLib.PinDirection.Input);
+            Console.WriteLine("   Output pins:");
+            ShowFilterGraphFilterPins(filter, DirectShowLib.PinDirection.Output);
+            Console.WriteLine();
+        }
+
+        private static void ShowFilterGraphFilterPins(Panoply.Library.FilterGraph.Filter filter, DirectShowLib.PinDirection direction)
+        {
+            foreach (FilterGraph.Pin pin in filter.GetPins(direction))
+            {
+                Console.Write("     * {0}",
+                    pin.Name);
+
+                FilterGraph.Pin connectedPin = pin.GetConnectedPin();
+                if (connectedPin == null)
+                {
+                    Console.WriteLine(" (Not connected)");
+                }
+                else
+                {
+                    Console.WriteLine(" (Connected to filter '{0}' pin '{1}')",
+                        connectedPin.Filter.Name,
+                        connectedPin.Name);
+                }
+            }
+        }
+
+        private static void RenderFilterGraph(String[] fileNames, string outputFilePath)
+        {
+            foreach (String filePath in fileNames)
+            {
+                Console.WriteLine("Rendering '{0}'", filePath);
+            }
+
+            FilterGraph.Graph graph = FilterGraph.GraphBuilder.BuildFilterGraphForFiles(fileNames);
+
+            using (TextWriter writer = File.CreateText(outputFilePath)) {
+                graph.RenderAsDotFile(writer);
+            }
+
+            Console.WriteLine("Rendering filter graph to '{0}'",
+                outputFilePath);
         }
     }
 }
