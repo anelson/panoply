@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.filtersTabPage = new System.Windows.Forms.TabPage();
             this.detailsGroupBox = new System.Windows.Forms.GroupBox();
@@ -52,14 +53,31 @@
             this.mediaInfoBrowseButton = new System.Windows.Forms.Button();
             this.mediaInfoSummaryTextBox = new System.Windows.Forms.TextBox();
             this.mediaInfoDetailsTreeView = new System.Windows.Forms.TreeView();
+            this.label4 = new System.Windows.Forms.Label();
+            this.graphViewsTabControl = new System.Windows.Forms.TabControl();
+            this.treeGraphTabPage = new System.Windows.Forms.TabPage();
+            this.graphvizGraphTabPage = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.graphVizPathTextBox = new System.Windows.Forms.TextBox();
+            this.graphVizBinaryPathBrowseButton = new System.Windows.Forms.Button();
+            this.graphViewGroupBox = new System.Windows.Forms.GroupBox();
+            this.graphvizGraphPictureBox = new System.Windows.Forms.PictureBox();
+            this.graphvizGraphPanel = new System.Windows.Forms.Panel();
             this.tabControl.SuspendLayout();
             this.filtersTabPage.SuspendLayout();
             this.detailsGroupBox.SuspendLayout();
             this.filterActionsGroupBox.SuspendLayout();
             this.filterTreeGroupBox.SuspendLayout();
             this.mediaInfoTabPage.SuspendLayout();
+            this.graphTabPage.SuspendLayout();
             this.summaryMediaInfoGroupBox.SuspendLayout();
             this.mediaInfoDetailsGroupBox.SuspendLayout();
+            this.graphViewsTabControl.SuspendLayout();
+            this.graphvizGraphTabPage.SuspendLayout();
+            this.graphViewGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.graphvizGraphPictureBox)).BeginInit();
+            this.graphvizGraphPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -240,9 +258,11 @@
             // 
             // graphTabPage
             // 
+            this.graphTabPage.Controls.Add(this.graphViewsTabControl);
+            this.graphTabPage.Controls.Add(this.label4);
             this.graphTabPage.Location = new System.Drawing.Point(4, 22);
             this.graphTabPage.Name = "graphTabPage";
-            this.graphTabPage.Size = new System.Drawing.Size(765, 439);
+            this.graphTabPage.Size = new System.Drawing.Size(765, 486);
             this.graphTabPage.TabIndex = 2;
             this.graphTabPage.Text = "Graph";
             this.graphTabPage.UseVisualStyleBackColor = true;
@@ -324,6 +344,128 @@
             this.mediaInfoDetailsTreeView.Size = new System.Drawing.Size(753, 230);
             this.mediaInfoDetailsTreeView.TabIndex = 0;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(437, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "To display the graph for a file, drop it on this window or browse for it using th" +
+                "e button at right";
+            // 
+            // graphViewsTabControl
+            // 
+            this.graphViewsTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphViewsTabControl.Controls.Add(this.treeGraphTabPage);
+            this.graphViewsTabControl.Controls.Add(this.graphvizGraphTabPage);
+            this.graphViewsTabControl.Location = new System.Drawing.Point(3, 16);
+            this.graphViewsTabControl.Name = "graphViewsTabControl";
+            this.graphViewsTabControl.SelectedIndex = 0;
+            this.graphViewsTabControl.Size = new System.Drawing.Size(759, 467);
+            this.graphViewsTabControl.TabIndex = 1;
+            // 
+            // treeGraphTabPage
+            // 
+            this.treeGraphTabPage.Location = new System.Drawing.Point(4, 22);
+            this.treeGraphTabPage.Name = "treeGraphTabPage";
+            this.treeGraphTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.treeGraphTabPage.Size = new System.Drawing.Size(751, 441);
+            this.treeGraphTabPage.TabIndex = 0;
+            this.treeGraphTabPage.Text = "Tree View";
+            this.treeGraphTabPage.UseVisualStyleBackColor = true;
+            // 
+            // graphvizGraphTabPage
+            // 
+            this.graphvizGraphTabPage.Controls.Add(this.graphViewGroupBox);
+            this.graphvizGraphTabPage.Controls.Add(this.graphVizBinaryPathBrowseButton);
+            this.graphvizGraphTabPage.Controls.Add(this.graphVizPathTextBox);
+            this.graphvizGraphTabPage.Controls.Add(this.label6);
+            this.graphvizGraphTabPage.Controls.Add(this.label5);
+            this.graphvizGraphTabPage.Location = new System.Drawing.Point(4, 22);
+            this.graphvizGraphTabPage.Name = "graphvizGraphTabPage";
+            this.graphvizGraphTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.graphvizGraphTabPage.Size = new System.Drawing.Size(751, 441);
+            this.graphvizGraphTabPage.TabIndex = 1;
+            this.graphvizGraphTabPage.Text = "Graphical View";
+            this.graphvizGraphTabPage.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(390, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "To render the filter graph visually you must have GraphViz 2.22 or higher install" +
+                "ed.";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 34);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(146, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "GraphViz dot.exe binary path:";
+            // 
+            // graphVizPathTextBox
+            // 
+            this.graphVizPathTextBox.Location = new System.Drawing.Point(161, 34);
+            this.graphVizPathTextBox.Name = "graphVizPathTextBox";
+            this.graphVizPathTextBox.Size = new System.Drawing.Size(315, 20);
+            this.graphVizPathTextBox.TabIndex = 2;
+            // 
+            // graphVizBinaryPathBrowseButton
+            // 
+            this.graphVizBinaryPathBrowseButton.Location = new System.Drawing.Point(482, 34);
+            this.graphVizBinaryPathBrowseButton.Name = "graphVizBinaryPathBrowseButton";
+            this.graphVizBinaryPathBrowseButton.Size = new System.Drawing.Size(75, 23);
+            this.graphVizBinaryPathBrowseButton.TabIndex = 3;
+            this.graphVizBinaryPathBrowseButton.Text = "Browse";
+            this.graphVizBinaryPathBrowseButton.UseVisualStyleBackColor = true;
+            // 
+            // graphViewGroupBox
+            // 
+            this.graphViewGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphViewGroupBox.Controls.Add(this.graphvizGraphPanel);
+            this.graphViewGroupBox.Location = new System.Drawing.Point(12, 60);
+            this.graphViewGroupBox.Name = "graphViewGroupBox";
+            this.graphViewGroupBox.Size = new System.Drawing.Size(733, 375);
+            this.graphViewGroupBox.TabIndex = 4;
+            this.graphViewGroupBox.TabStop = false;
+            this.graphViewGroupBox.Text = "View";
+            // 
+            // graphvizGraphPictureBox
+            // 
+            this.graphvizGraphPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphvizGraphPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("graphvizGraphPictureBox.Image")));
+            this.graphvizGraphPictureBox.InitialImage = null;
+            this.graphvizGraphPictureBox.Location = new System.Drawing.Point(3, 3);
+            this.graphvizGraphPictureBox.Name = "graphvizGraphPictureBox";
+            this.graphvizGraphPictureBox.Size = new System.Drawing.Size(1469, 568);
+            this.graphvizGraphPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.graphvizGraphPictureBox.TabIndex = 0;
+            this.graphvizGraphPictureBox.TabStop = false;
+            // 
+            // graphvizGraphPanel
+            // 
+            this.graphvizGraphPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphvizGraphPanel.AutoScroll = true;
+            this.graphvizGraphPanel.Controls.Add(this.graphvizGraphPictureBox);
+            this.graphvizGraphPanel.Location = new System.Drawing.Point(6, 19);
+            this.graphvizGraphPanel.Name = "graphvizGraphPanel";
+            this.graphvizGraphPanel.Size = new System.Drawing.Size(721, 350);
+            this.graphvizGraphPanel.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -343,9 +485,18 @@
             this.filterActionsGroupBox.ResumeLayout(false);
             this.filterTreeGroupBox.ResumeLayout(false);
             this.mediaInfoTabPage.ResumeLayout(false);
+            this.graphTabPage.ResumeLayout(false);
+            this.graphTabPage.PerformLayout();
             this.summaryMediaInfoGroupBox.ResumeLayout(false);
             this.summaryMediaInfoGroupBox.PerformLayout();
             this.mediaInfoDetailsGroupBox.ResumeLayout(false);
+            this.graphViewsTabControl.ResumeLayout(false);
+            this.graphvizGraphTabPage.ResumeLayout(false);
+            this.graphvizGraphTabPage.PerformLayout();
+            this.graphViewGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.graphvizGraphPictureBox)).EndInit();
+            this.graphvizGraphPanel.ResumeLayout(false);
+            this.graphvizGraphPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -376,5 +527,16 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox mediaInfoSummaryTextBox;
         private System.Windows.Forms.TreeView mediaInfoDetailsTreeView;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabControl graphViewsTabControl;
+        private System.Windows.Forms.TabPage treeGraphTabPage;
+        private System.Windows.Forms.TabPage graphvizGraphTabPage;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox graphViewGroupBox;
+        private System.Windows.Forms.Button graphVizBinaryPathBrowseButton;
+        private System.Windows.Forms.TextBox graphVizPathTextBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.PictureBox graphvizGraphPictureBox;
+        private System.Windows.Forms.Panel graphvizGraphPanel;
     }
 }

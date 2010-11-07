@@ -25,6 +25,10 @@ namespace Panoply.Gui
         {
             RefreshFilters();
             ClearFilterDetails();
+
+            graphvizGraphPictureBox.Image = Image.FromFile("c:\\work\\temp\\test.png");
+            graphvizGraphPictureBox.Width = graphvizGraphPictureBox.Image.Width;
+            graphvizGraphPictureBox.Height = graphvizGraphPictureBox.Image.Height;
         }
 
         private void filtersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
